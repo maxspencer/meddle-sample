@@ -15,9 +15,9 @@ public class LoginForm extends Form {
     public final BooleanField rememberMe;
 
     public LoginForm() {
-        email = addField(new EmailField());
-        password = addField(new TextField(true));
-        rememberMe = addField(new BooleanField(true));
+        email = addField(new EmailField(true));
+        password = addField(new TextField(true, 8));
+        rememberMe = addField(new BooleanField(false));
     }
 
 }

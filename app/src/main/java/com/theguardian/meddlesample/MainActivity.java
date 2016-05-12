@@ -1,10 +1,13 @@
 package com.theguardian.meddlesample;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.theguardian.meddle.Form;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,8 +21,20 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "Create new LoginForm");
         loginForm = new LoginForm();
-        loginForm.restoreState(savedInstanceState);
-        loginForm.bindTo(findViewById(R.id.email), findViewById(R.id.password), findViewById(R.id.remember_me));
+        loginForm.bindViews(findViewById(R.id.email), findViewById(R.id.password), findViewById(R.id.remember_me));
+        loginForm.addValidityListener(new Form.FormValidityListener() {
+            @Override
+            public void onValidityChanged(@NonNull Form form, boolean valid) {
+                final String message = valid ? "Form is now valid" : "Form is now invalid";
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        loginForm = null;
     }
 
     public void onLoginClick(View view) {
@@ -32,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        loginForm.saveState(outState);
-        Log.d(TAG, "Write loginForm to outState");
     }
 
 }
